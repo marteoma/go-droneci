@@ -7,25 +7,22 @@ steps:
   commands:
   - go get -v -t -d ./...
   - go build
-
-- name: notify
-  image: drillster/drone-email
-  settings: 
-    host: smtp
-    username: user
-    password: pwd
-    port: 25
-    skip_verify: true
-    from: pipeline@cloud.drone.io
-    recipients: [ mateo.arbr@gmail.com ]
-    when:
-      status: [ changed, success, failure ]
-
+      
 - name: testing
   image: golang
   commands:
   - go get -v -t -d ./...
   - go test -v ./...
+      
+services:
+- name: smtp
+  image: catatnight/postfix
+  environment:
+    ports: 25
+    maildomain: cloud.drone.io
+    smtp_user: user:pwd
+    messageSizeLimit: 40960000
+    mailboxSizeLimit: 40960000
 
 - name: publish
   image: plugins/docker
@@ -36,16 +33,20 @@ steps:
       from_secret: DOCKER_PASSWORD
     repo: marteoma/go-droneci
     tags:
-      - 0.0.3
+      - 0.0.5
       - latest
+  when:
+    branch:
+    - master
 
-services:
-
-- name: smtp
-  image: catatnight/postfix
-  environment:
-    ports: 25
-    maildomain: cloud.drone.io
-    smtp_user: user:pwd
-    messageSizeLimit: 40960000
-    mailboxSizeLimit: 40960000
+- name: notify
+  image: drillster/drone-email
+  settings: 
+    host: smtp
+    username: user
+    password: pwd
+    port: 25
+    skip_verify: true
+    from: pipeline@cloud.drone.io
+    when:
+      status: [ changed, success, failure ]
