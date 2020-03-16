@@ -21,7 +21,7 @@ services:
       from_secret: DOCKER_USERNAME
     password:
       from_secret: DOCKER_PASSWORD
-    repo: twogghub/go-droneci
+    repo: marteoma/go-droneci
     tags:
       - 0.0.1
       - latest
