@@ -35,8 +35,9 @@ steps:
     port: 25
     skip_verify: true
     from: pipeline@cloud.drone.io
+    recipients: [ mateo.arbr@gmail.com ]
     when:
-      status: [ changed, success ]
+      status: [ changed, success, failure ]
 
 services:
 - name: smtp
