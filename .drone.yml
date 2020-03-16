@@ -23,5 +23,5 @@ services:
       from_secret: DOCKER_PASSWORD
     repo: marteoma/go-droneci
     tags:
-      - 0.0.1
+      - 0.0.2
       - latest
